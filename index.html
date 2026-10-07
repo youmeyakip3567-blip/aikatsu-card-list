@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+
+  <h1>アイカツ！カードリスト</h1>
+
+  <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru&display=swap" rel="stylesheet">
+
+<div id="filter-box">
+
+  <div id="search-area">
+  <input
+    type="text"
+    id="search-input"
+    placeholder="カード名を検索"
+  >
+  <button id="search-button">検索</button>
+</div>
+
+<div id="filters">
+  <select id="series-filter">
+    <option value="all">すべてのシリーズ</option>
+    <option value="アンコール">アンコール</option>
+  </select>
+
+  <select id="set-filter">
+    <option value="all">すべての弾</option>
+    <option value="第1弾">第1弾</option>
+  </select>
+
+  <select id="brand-filter">
+    <option value="all">すべてのブランド</option>
+    <option value="ノーブランド">ノーブランド</option>
+    <option value="Angely Sugar">Angely Sugar</option>
+    <option value="Dreamy Crown">Dreamy Crown</option>
+    <option value="Maple Ribbon">Maple Ribbon</option>
+    <option value="FUTURING GIRL">FUTURING GIRL</option>
+    <option value="SPICY AGEHA">SPICY AGEHA</option>
+  </select>
+
+  <select id="owned-filter">
+    <option value="all">すべて</option>
+    <option value="owned">所持</option>
+    <option value="unowned">未所持</option>
+  </select>
+
+  <select id="sort-filter">
+  <option value="id-asc">カード番号：昇順</option>
+  <option value="id-desc">カード番号：降順</option>
+  <option value="rarity">レアリティ順</option>
+</select>
+
+</div>
+
+</div>
+
+</div>
+
+  <style>
+  .card {
+  width: 190px;
+  padding: 15px;
+  border: 3px solid #ccc;
+  border-radius: 16px;
+  text-align: center;
+  background-color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+ .image-wrapper {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.image-wrapper img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+}
+
+#card-detail img {
+  border-radius: 8px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+}
+
+.image-wrapper .accessory-image {
+  width: 133%;
+  max-width: none;
+  height: auto;
+  transform: rotate(90deg);
+}
+
+ .card-name {
+  font-size: 15px;
+  font-weight: bold;
+  margin: 0 0 12px;
+  line-height: 1.4;
+  height: 56px;
+}
+
+.card p {
+  margin: 5px 0;
+}
+
+.quantity {
+  margin-top: 15px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.quantity button {
+  margin: 0 8px;
+  font-size: 18px;
+  width: 40px;
+  height: 35px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: white;
+  cursor: pointer;
+}
+
+.quantity button:hover {
+  background-color: #f5f5f5;
+}
+
+.card-info {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+  font-size: 14px;
+  color: #999;
+  line-height: 1.6;
+}
+
+#card-list {
+  display: grid;
+  grid-template-columns: repeat(6, 190px);
+  gap: 10px;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+@media (min-width: 1501px) {
+  .card {
+    width: 190px;
+    gap: 10px;
+    zoom: 0.8
+  }
+}
+
+@media (max-width: 1500px) {
+  #card-list {
+    grid-template-columns: repeat(2, 210px);
+    gap: 25px;
+    zoom: 0.8;
+  }
+
+  #filter-box {
+    width: 80%;
+    max-width: 400px;
+    box-sizing: border-box;
+  }
+
+  #search-input {
+  width: 60%;
+  box-sizing: border-box;
+  }
+
+  #filters {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  gap: 5px;
+  justify-content: center;
+  }
+
+  #sort-filter {
+  grid-column: 1 / 3;
+  justify-self: center;
+  }
+
+  #search-button {
+  white-space: nowrap;
+  }
+}
+.card.cute {
+  border-color: #e73564;
+}
+
+.card.cool {
+  border-color: #015dad;
+}
+
+.card.sexy {
+  border-color: #910780;
+}
+
+.card.pop {
+  border-color: #eb6b04;
+}
+
+#card-detail {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  width: 80%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+  background-color: white;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  text-align: center;
+  z-index: 100;
+}
+
+#close-detail {
+  margin-top: 20px;
+  padding: 8px 20px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+}
+
+#close-detail:hover {
+  background-color: #f5f5f5;
+}
+
+.detail-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.detail-info p {
+  margin: 2px 0;
+}
+
+.detail-type {
+  display: inline-block;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+.detail-type.cute {
+  background-color: #ffe0e8;
+  color: #e73564;
+}
+
+.detail-type.cool {
+  background-color: #dcecff;
+  color: #015dad;
+}
+
+.detail-type.sexy {
+  background-color: #f0ddff;
+  color: #910780;
+}
+
+.detail-type.pop {
+background-color: #ffe5cc;
+color: #eb6b04;
+}
+
+#overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 50;
+}
+
+#series-filter,
+#set-filter,
+#brand-filter,
+#owned-filter,
+#sort-filter {
+  padding: 8px 12px;
+  margin: 5px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.card-rarity {
+  margin: -8px 0 12px;
+  font-size: 14px;
+  color: #666;
+}
+.card-rarity.プレミアム {
+  font-weight: bold;
+  color: #c28a00;
+}
+
+.card-rarity.アンコールレア {
+  font-weight: bold;
+  color: #c28a00;
+}
+
+.card-rarity.レア {
+  font-weight: bold;
+}
+
+.card-info p {
+  margin: 3px 0;
+}
+
+.quantity span {
+  display: inline-block;
+  min-width: 30px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+h1 {
+  text-align: center;
+  font-weight: 700;
+}
+
+#filters {
+  text-align: center;
+}
+
+#search-area {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+#search-input {
+  width: 300px;
+  height: 42px;
+  box-sizing: border-box;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+#search-button {
+  height: 42px;
+  box-sizing: border-box;
+  padding: 12px 18px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#filter-box {
+  width: 600px;
+  margin: 20px auto 30px;
+  padding: 15px;
+  border: 2px solid #e73564;
+  border-radius: 12px;
+  text-align: center;
+}
+
+body {
+  background-color: #fff8fa;
+  font-family: "Kiwi Maru", sans-serif
+}
+
+#series-filter,
+#set-filter,
+#brand-filter,
+#owned-filter,
+#sort-filter,
+#search-input,
+#search-button {
+  background-color: #fff8fa;
+  border: 2px solid #e73564;
+}
+
+#series-filter,
+#set-filter,
+#brand-filter,
+#owned-filter,
+#sort-filter,
+#search-input,
+#search-button {
+  border-color: #e73564;
+}
+
+#series-filter,
+#set-filter,
+#brand-filter,
+#owned-filter,
+#sort-filter {
+  appearance: none;
+  background-color: #fff8fa;
+  border: 2px solid #e73564;
+  background-image: linear-gradient(45deg, transparent 50%, #e73564 50%),
+                    linear-gradient(135deg, #e73564 50%, transparent 50%);
+  background-position: calc(100% - 12px) 50%,
+                       calc(100% - 7px) 50%;
+  background-size: 5px 5px,
+                   5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 25px;
+}
+
+#series-filter,
+#set-filter,
+#brand-filter,
+#owned-filter,
+#sort-filter,
+#search-input,
+#search-button {
+  font-family: "Kiwi Maru", serif;
+}
+</style>
+</head>
+
+<div id="card-list"></div>
+<div id="overlay"></div>
+<div id="card-detail"></div>
+
+  <script>
+let cards = [];
+
+fetch("cards.json")
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(data) {
+    cards = data;
+    console.log(cards);
+
+    const savedCards = localStorage.getItem("aikatsuCards");
+
+    if (savedCards) {
+      const savedData = JSON.parse(savedCards);
+
+      cards.forEach(function(card) {
+        const savedCard = savedData.find(function(saved) {
+          return saved.id === card.id;
+        });
+
+        if (savedCard) {
+          card.quantity = savedCard.quantity;
+        }
+      });
+    }
+
+    updateSetOptions();
+    displayCards(cards);
+  });
+
+const cardList = document.getElementById("card-list");
+const seriesFilter = document.getElementById("series-filter");
+const setFilter = document.getElementById("set-filter");
+const brandFilter = document.getElementById("brand-filter");
+const ownedFilter = document.getElementById("owned-filter");
+const sortFilter = document.getElementById("sort-filter");
+const searchInput = document.getElementById("search-input");
+const searchButton = document.getElementById("search-button");
+function updateSetOptions() {
+  const selectedSeries = seriesFilter.value;
+
+  setFilter.innerHTML = "";
+
+  const allOption = document.createElement("option");
+  allOption.value = "all";
+  allOption.textContent = "すべての弾";
+  setFilter.appendChild(allOption);
+
+  const sets = [];
+
+  cards.forEach(function(card) {
+    if (
+      selectedSeries === "all" ||
+      card.series === selectedSeries
+    ) {
+      if (!sets.includes(card.set)) {
+        sets.push(card.set);
+      }
+    }
+  });
+
+  sets.forEach(function(set) {
+    const option = document.createElement("option");
+    option.value = set;
+    option.textContent = set;
+    setFilter.appendChild(option);
+  });
+}
+
+updateSetOptions();
+
+seriesFilter.addEventListener("change", function() {
+  updateSetOptions();
+  filterCards();
+});
+
+setFilter.addEventListener("change", function() {
+  filterCards();
+});
+
+brandFilter.addEventListener("change", function() {
+  filterCards();
+});
+
+ownedFilter.addEventListener("change", function() {
+  filterCards();
+});
+
+sortFilter.addEventListener("change", function() {
+  filterCards();
+});
+
+searchButton.addEventListener("click", function() {
+  filterCards();
+});
+searchInput.addEventListener("keydown", function(event) {
+  if (event.key === "Enter") {
+    filterCards();
+  }
+});
+
+function filterCards() {
+  const selectedSeries = seriesFilter.value;
+  const selectedSet = setFilter.value;
+  const selectedBrand = brandFilter.value;
+  const selectedOwned = ownedFilter.value;
+const searchText = searchInput.value
+  .toLowerCase()
+  .replace(/[ァ-ヶ]/g, function(char) {
+    return String.fromCharCode(char.charCodeAt(0) - 0x60);
+  });
+
+  const filteredCards = cards.filter(function(card) {
+    const seriesMatch =
+      selectedSeries === "all" || card.series === selectedSeries;
+
+    const setMatch =
+      selectedSet === "all" || card.set === selectedSet;
+
+    const brandMatch =
+      selectedBrand === "all" || card.brand === selectedBrand;
+
+    const ownedMatch =
+      selectedOwned === "all" ||
+      (selectedOwned === "owned" && card.quantity > 0) ||
+      (selectedOwned === "unowned" && card.quantity === 0);
+
+const cardName = card.name
+  .toLowerCase()
+  .replace(/[ァ-ヶ]/g, function(char) {
+    return String.fromCharCode(char.charCodeAt(0) - 0x60);
+  });
+
+const searchMatch =
+  cardName.includes(searchText);
+
+return seriesMatch && setMatch && brandMatch && ownedMatch && searchMatch;  });
+
+if (sortFilter.value === "id-asc") {
+  filteredCards.sort(function(a, b) {
+    return a.id.localeCompare(b.id, undefined, { numeric: true });
+  });
+}
+
+if (sortFilter.value === "id-desc") {
+  filteredCards.sort(function(a, b) {
+    return b.id.localeCompare(a.id, undefined, { numeric: true });
+  });
+}
+
+if (sortFilter.value === "rarity") {
+  const rarityOrder = {
+    "アンコールレア": 1,
+    "プレミアム": 2,
+    "レア": 3,
+    "ノーマル": 4
+  };
+
+  filteredCards.sort(function(a, b) {
+    if (rarityOrder[a.rarity] !== rarityOrder[b.rarity]) {
+      return rarityOrder[a.rarity] - rarityOrder[b.rarity];
+    }
+
+    return a.id.localeCompare(b.id, undefined, { numeric: true });
+  });
+}
+
+  displayCards(filteredCards);
+}
+
+
+function displayCards(cardArray) {
+  cardList.innerHTML = "";
+
+  cardArray.forEach(function(card) {
+
+  const cardElement = document.createElement("div");
+  cardElement.className = "card";
+
+  const cardContent = document.createElement("div");
+cardContent.className = "card-content";
+
+cardElement.classList.add(
+  card.type === "キュート" ? "cute" :
+  card.type === "クール" ? "cool" :
+  card.type === "セクシー" ? "sexy" :
+  card.type === "ポップ" ? "pop" :
+
+  ""
+);
+
+const imageElement = document.createElement("img");
+
+imageElement.src = card.image;
+
+const imageWrapper = document.createElement("div");
+imageWrapper.className = "image-wrapper";
+
+if (card.itemType === "アクセサリー") {
+  imageElement.classList.add("accessory-image");
+}
+
+imageWrapper.appendChild(imageElement);
+
+imageElement.addEventListener("click", function() {
+  const detailElement = document.getElementById("card-detail");
+
+  detailElement.innerHTML =
+    "<img src='" + card.image + "' width='300'>" +
+    "<h2>" + card.name + "</h2>" +
+    "<div class='detail-info'>" +
+"<p>レアリティ：" + card.rarity + "</p>" +
+"<p>シリーズ：" + card.series + "</p>" +
+"<p>弾：" + card.set + "</p>" +
+"<p>ブランド：" + card.brand + "</p>" +
+"<p>タイプ：<span class='detail-type " +
+(
+  card.type === "キュート" ? "cute" :
+  card.type === "クール" ? "cool" :
+  card.type === "セクシー" ? "sexy" :
+  card.type === "ポップ" ? "pop" :
+  ""
+) +
+"'>" + card.type + "</span></p>" +
+"<p>アイテム：" + card.itemType + "</p>" +
+"</div>" +
+"<button id='close-detail'>閉じる</button>";
+
+    detailElement.style.display = "block";
+    document.getElementById("overlay").style.display = "block";
+
+    detailElement.scrollIntoView({
+  behavior: "smooth"
+});
+    document.getElementById("close-detail").addEventListener("click", function() {
+  detailElement.style.display = "none";
+  document.getElementById("overlay").style.display = "none";
+});
+});
+
+cardElement.appendChild(imageWrapper);
+
+  const nameElement = document.createElement("p");
+nameElement.className = "card-name";
+nameElement.innerHTML = card.name;
+cardElement.appendChild(nameElement);
+
+const rarityElement = document.createElement("p");
+rarityElement.className = "card-rarity " + card.rarity;
+rarityElement.textContent = card.rarity;
+cardElement.appendChild(rarityElement);
+
+  const quantityElement = document.createElement("div");
+quantityElement.className = "quantity";
+
+const minusButton = document.createElement("button");
+minusButton.textContent = "−";
+
+const quantityText = document.createElement("span");
+quantityText.textContent = card.quantity;
+
+const plusButton = document.createElement("button");
+plusButton.textContent = "＋";
+
+quantityElement.appendChild(minusButton);
+quantityElement.appendChild(quantityText);
+quantityElement.appendChild(plusButton);
+
+cardElement.appendChild(quantityElement);
+
+plusButton.addEventListener("click", function() {
+  card.quantity++;
+  localStorage.setItem("aikatsuCards", JSON.stringify(cards));
+  quantityText.textContent = card.quantity;
+});
+
+minusButton.addEventListener("click", function() {
+  if (card.quantity > 0) {
+    card.quantity--;
+    localStorage.setItem("aikatsuCards", JSON.stringify(cards));
+    quantityText.textContent = card.quantity;
+  }
+});
+
+  const infoElement = document.createElement("div");
+  infoElement.className = "card-info";
+
+  const seriesSetElement = document.createElement("p");
+seriesSetElement.textContent =
+  card.series + "　" + card.set;
+
+infoElement.appendChild(seriesSetElement);
+  cardElement.appendChild(infoElement);
+
+  cardList.appendChild(cardElement);
+});
+}
+
+const overlay = document.getElementById("overlay");
+
+overlay.addEventListener("click", function() {
+  document.getElementById("card-detail").style.display = "none";
+  overlay.style.display = "none";
+});
+
+document.addEventListener("keydown", function(event) {
+  if (event.key === "Escape") {
+    document.getElementById("card-detail").style.display = "none";
+    overlay.style.display = "none";
+  }
+});
+  </script>
+</body>
+</html>
