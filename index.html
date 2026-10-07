@@ -11,6 +11,17 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru&display=swap" rel="stylesheet">
 
+  <div id="card-list"></div>
+
+<div id="pagination">
+  <button id="prev-page">‹ 前へ</button>
+  <span id="page-number">1 / 1</span>
+  <button id="next-page">次へ ›</button>
+</div>
+
+<div id="overlay"></div>
+<div id="card-detail"></div>
+
 <div id="filter-box">
 
   <div id="search-area">
@@ -489,16 +500,7 @@ body {
 </style>
 </head>
 
-<div id="card-list"></div>
 
-<div id="pagination">
-  <button id="prev-page">‹ 前へ</button>
-  <span id="page-number">1 / 1</span>
-  <button id="next-page">次へ ›</button>
-</div>
-
-<div id="overlay"></div>
-<div id="card-detail"></div>
 
   <script>
 let cards = [];
