@@ -458,15 +458,54 @@ body {
 #search-button {
   font-family: "Kiwi Maru", serif;
 }
+
+#pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin: 30px 0;
+}
+
+#pagination button {
+  padding: 8px 16px;
+  font-size: 15px;
+  font-family: "Kiwi Maru", serif;
+  border: 2px solid #e73564;
+  border-radius: 8px;
+  background-color: #fff8fa;
+  color: #e73564;
+  cursor: pointer;
+}
+
+#pagination button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+#page-number {
+  font-size: 16px;
+}
 </style>
 </head>
 
 <div id="card-list"></div>
+
+<div id="pagination">
+  <button id="prev-page">‹ 前へ</button>
+  <span id="page-number">1 / 1</span>
+  <button id="next-page">次へ ›</button>
+</div>
+
 <div id="overlay"></div>
 <div id="card-detail"></div>
 
   <script>
 let cards = [];
+
+const cardsPerPage = 24;
+let currentPage = 1;
+let currentCards = [];
 
 fetch("cards.json")
   .then(function(response) {
@@ -493,7 +532,10 @@ fetch("cards.json")
     }
 
     updateSetOptions();
-    displayCards(cards);
+currentCards = cards;
+currentPage = 1;
+displayCards(currentCards);
+updatePagination();
   });
 
 const cardList = document.getElementById("card-list");
@@ -633,14 +675,21 @@ if (sortFilter.value === "rarity") {
   });
 }
 
-  displayCards(filteredCards);
+    currentCards = filteredCards;
+  currentPage = 1;
+  displayCards(currentCards);
+  updatePagination();
 }
 
 
 function displayCards(cardArray) {
   cardList.innerHTML = "";
 
-  cardArray.forEach(function(card) {
+  const start = (currentPage - 1) * cardsPerPage;
+  const end = start + cardsPerPage;
+  const pageCards = cardArray.slice(start, end);
+
+  pageCards.forEach(function(card) {
 
   const cardElement = document.createElement("div");
   cardElement.className = "card";
@@ -763,6 +812,42 @@ infoElement.appendChild(seriesSetElement);
   cardList.appendChild(cardElement);
 });
 }
+
+const pagination = document.getElementById("pagination");
+const prevPage = document.getElementById("prev-page");
+const nextPage = document.getElementById("next-page");
+const pageNumber = document.getElementById("page-number");
+
+function updatePagination() {
+  const totalPages = Math.ceil(currentCards.length / cardsPerPage);
+
+  pageNumber.textContent = currentPage + " / " + totalPages;
+
+  prevPage.disabled = currentPage === 1;
+  nextPage.disabled = currentPage === totalPages;
+
+  pagination.style.display = totalPages <= 1 ? "none" : "flex";
+}
+
+prevPage.addEventListener("click", function() {
+  if (currentPage > 1) {
+    currentPage--;
+    displayCards(currentCards);
+    updatePagination();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+});
+
+nextPage.addEventListener("click", function() {
+  const totalPages = Math.ceil(currentCards.length / cardsPerPage);
+
+  if (currentPage < totalPages) {
+    currentPage++;
+    displayCards(currentCards);
+    updatePagination();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+});
 
 const overlay = document.getElementById("overlay");
 
